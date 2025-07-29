@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nifty Box Arbitrage Finder</title>
+    <meta http-equiv="refresh" content="60">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        h2 {
+            text-align: center;
+            margin-top: 30px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 95%;
+            margin: 20px auto;
+        }
+        th, td {
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        td:last-child {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h2>Nifty Box Arbitrage Opportunities</h2>
+    <p style="text-align: center; font-style: italic; color: gray;">
+        Last updated: {{ timestamp }}
+    </p>
+
+    <table>
+        <tr>
+            <th>Strike A</th>
+            <th>Strike B</th>
+            <th>Call Buy @A (Ask)</th>
+            <th>Call Sell @B (Bid)</th>
+            <th>Put Buy @B (Ask)</th>
+            <th>Put Sell @A (Bid)</th>
+            <th>Box Value</th>
+            <th>Box Cost</th>
+            <th>Profit</th>
+        </tr>
+        {% for box in boxes %}
+        <tr>
+            <td>{{ box['Strike A'] }}</td>
+            <td>{{ box['Strike B'] }}</td>
+            <td>{{ box['Call Buy @A (Ask)'] }}</td>
+            <td>{{ box['Call Sell @B (Bid)'] }}</td>
+            <td>{{ box['Put Buy @B (Ask)'] }}</td>
+            <td>{{ box['Put Sell @A (Bid)'] }}</td>
+            <td>{{ box['Box Value'] }}</td>
+            <td>{{ box['Box Cost'] }}</td>
+            <td>{{ box['Profit'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
