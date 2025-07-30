@@ -6,10 +6,11 @@ from datetime import datetime
 import time
 
 # Telegram Configuration
-TELEGRAM_TOKEN = "8306047151:AAHSQV9XKuc-fa0RawWDhCXOvHYR3QaiUxc"
-CHAT_ID = "940580066"
-bot = Bot(token=TELEGRAM_TOKEN)
+import os
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
+CHAT_ID = os.getenv("CHAT_ID")
 alerted_boxes = set()
+
 
 app = Flask(__name__)
 
