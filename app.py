@@ -148,15 +148,30 @@ Box Cost: ₹{round(box_cost, 2)}
 
 
 @app.route('/')
+from datetime import datetime, time as dtime
+
+@app.route('/')
 def home():
     try:
-        df, timestamp = fetch_option_chain()
-        boxes = find_profitable_boxes(df)
+        now = datetime.now().time()
+        market_open = dtime(9, 15)
+        market_close = dtime(15, 30)
+
+        if market_open <= now <= market_close:
+            df, timestamp = fetch_option_chain()
+            boxes = find_profitable_boxes(df)
+        else:
+            boxes = []
+            timestamp = datetime.now().strftime("%d-%b-%Y %H:%M:%S")
+            print("⏰ Outside market hours. Skipping data fetch.")
+
     except Exception as e:
         print(f"App error: {e}")
         boxes = []
         timestamp = datetime.now().strftime("%d-%b-%Y %H:%M:%S")
+
     return render_template("index.html", boxes=boxes, timestamp=timestamp)
+
 
 
 if __name__ == "__main__":
