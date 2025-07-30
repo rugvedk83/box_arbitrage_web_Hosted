@@ -4,13 +4,13 @@ import requests
 import pandas as pd
 from datetime import datetime, time as dtime
 import time
+import os
 
 # Telegram Configuration
-import os
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
+bot = Bot(token=TELEGRAM_TOKEN)
 alerted_boxes = set()
-
 
 app = Flask(__name__)
 
@@ -33,7 +33,7 @@ def fetch_option_chain():
             data = response.json()
 
             all_expiries = data['records']['expiryDates']
-            current_expiry = all_expiries[0]  # Only nearest expiry
+            current_expiry = all_expiries[0]
             underlying = data['records'].get('underlyingValue', 0)
             records = data['records']['data']
 
@@ -53,7 +53,6 @@ def fetch_option_chain():
                 if not ce or not pe:
                     continue
 
-                # ✅ Match expiry for both CE and PE
                 if ce.get('expiryDate') != current_expiry or pe.get('expiryDate') != current_expiry:
                     continue
 
@@ -97,7 +96,6 @@ def find_profitable_boxes(df):
             if A['strike'] >= B['strike']:
                 continue
 
-            # ✅ Liquidity and bid/ask check
             legs_ok = (
                 A['call_bid'] > 0 and A['call_ask'] > 0 and
                 B['call_bid'] > 0 and B['call_ask'] > 0 and
@@ -109,8 +107,8 @@ def find_profitable_boxes(df):
             if not legs_ok:
                 continue
 
-            call_spread = A['call_ask'] - B['call_bid']  # Buy A call, sell B call
-            put_spread = B['put_ask'] - A['put_bid']     # Buy B put, sell A put
+            call_spread = A['call_ask'] - B['call_bid']
+            put_spread = B['put_ask'] - A['put_bid']
             box_cost = call_spread + put_spread
             box_value = B['strike'] - A['strike']
             profit = round(box_value - box_cost, 2)
@@ -148,9 +146,6 @@ Box Cost: ₹{round(box_cost, 2)}
 
 
 @app.route('/')
-from datetime import datetime, time as dtime
-
-@app.route('/')
 def home():
     try:
         now = datetime.now().time()
@@ -173,7 +168,5 @@ def home():
     return render_template("index.html", boxes=boxes, timestamp=timestamp)
 
 
-
 if __name__ == "__main__":
     app.run(debug=False, host='0.0.0.0', port=10000)
-
