@@ -2,7 +2,7 @@ from telegram import Bot
 from flask import Flask, render_template
 import requests
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, time as dtime
 import time
 
 # Telegram Configuration
