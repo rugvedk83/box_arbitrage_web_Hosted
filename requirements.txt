@@ -1,4 +1,5 @@
-Flask
-requests
+flask
 pandas
-python-telegram-bot==13.15
+requests
+python-telegram-bot
+gunicorn
