@@ -15,4 +15,4 @@ COPY . .
 EXPOSE 10000
 
 # Start the Flask app using gunicorn and the Render-provided PORT env variable
-CMD ["gunicorn", "-b", "0.0.0.0:${PORT}", "app:app"]
+CMD gunicorn -b 0.0.0.0:$PORT app:app
