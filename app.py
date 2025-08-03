@@ -38,15 +38,22 @@ def fetch_option_chain():
             context = browser.new_context(user_agent="Mozilla/5.0")
             page = context.new_page()
 
-            print("🌐 Visiting NSE option chain page...")
-            page.goto("https://www.nseindia.com/option-chain", timeout=60000)
-            page.wait_for_timeout(5000)  # let JS cookies load
+print("🌐 Visiting NSE option chain page...")
+page.goto("https://www.nseindia.com/option-chain", timeout=60000)
+page.wait_for_timeout(5000)  # let JS cookies load
 
-            print("📦 Fetching raw option chain JSON data...")
-            response = context.request.get("https://www.nseindia.com/api/option-chain-indices?symbol=NIFTY")
-            data = response.json()
+print("📦 Fetching raw option chain JSON data...")
+response = context.request.get("https://www.nseindia.com/api/option-chain-indices?symbol=NIFTY")
+print(f"HTTP Response Status: {response.status}")
 
-            browser.close()
+if response.status != 200:
+    print(f"❌ Failed to fetch data from NSE. Status code: {response.status}")
+    return pd.DataFrame(), datetime.now().strftime("%d-%b-%Y %H:%M:%S")
+
+data = response.json()
+
+browser.close()
+
 
         all_expiries = data['records']['expiryDates']
         current_expiry = all_expiries[0]
